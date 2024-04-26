@@ -19,7 +19,6 @@ class CreateUlasanBukuRequest extends CustomFormRequest
             "buku_id" => "required|integer",
             "ulasan" => "required|string",
             "rating" => "required|integer",
-            "user_id" => "required|integer",
         ];
     }
 }

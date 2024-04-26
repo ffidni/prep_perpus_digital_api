@@ -33,6 +33,11 @@ class UlasanBukuModel extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function buku()
+    {
+        return $this->belongsTo(BukuModel::class, 'buku_id');
+    }
+
 
 
 }

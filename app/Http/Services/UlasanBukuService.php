@@ -18,6 +18,8 @@ class UlasanBukuService
         if ($isExists)
             throw new ApiException(Response::HTTP_NOT_FOUND, "Kamu sudah menilai buku ini", null);
 
+        $data['user_id'] = $user->user_id;
+
         return UlasanBukuModel::create($data);
     }
 

@@ -15,6 +15,7 @@ class GetBukuRequest extends CustomFormRequest
             "tahun_terbit.to" => "nullable|integer",
             "is_premium" => "nullable|integer",
             "kategori_id" => "nullable|integer",
+            "rekomendasi" => "nullable|integer|min:0|max:1"
         ];
     }
 }

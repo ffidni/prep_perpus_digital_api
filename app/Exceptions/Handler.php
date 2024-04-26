@@ -45,7 +45,6 @@ class Handler extends ExceptionHandler
             $message = $exception->getMessage();
             $data = $exception->getData();
         } elseif ($exception instanceof QueryException && $exception->errorInfo[1] == 1062) {
-            // Check if it's a duplicate entry error
             $statusCode = 400;
             $message = "Username telah terpakai. Gunakan yang lain!";
         }

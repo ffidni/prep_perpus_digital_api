@@ -10,11 +10,31 @@ use App\Models\GroupChat;
 use App\Models\User;
 use Illuminate\Http\Response;
 
+
+/**
+ * Class UserService
+ *
+ * Kelas ini menyediakan layanan terkait manajemen pengguna.
+ * Ini mencakup fungsi untuk membuat, mengambil, memperbarui, dan menghapus pengguna.
+ *
+ * @author Haikal
+ * @version 1.0
+ * @date 20 Maret 2024
+ */
+
 class UserService
 {
+    /**
+     * Membuat pengguna baru.
+     *
+     * @param array $data Data untuk pengguna baru.
+     * @return \App\Models\User Pengguna yang baru dibuat.
+     */
     public function createUser(array $data)
     {
+        // Unggah avatar pengguna
         $data['avatar'] = HelperLib::uploadFile($data['avatar'], "user/avatar", "avatar");
+        // Buat catatan pengguna dalam basis data
         return User::create($data);
     }
 
@@ -30,7 +50,6 @@ class UserService
         }
 
         return $query->paginate($filters['per_page'], ['*'], "Page", $filters['page']);
-
     }
 
     public function getUserById(string $id)

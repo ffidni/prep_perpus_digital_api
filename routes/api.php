@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BukuController;
+use App\Http\Controllers\BukuReadController;
 use App\Http\Controllers\KategoriBukuController;
 use App\Http\Controllers\KategoriBukuRelasiController;
 use App\Http\Controllers\KoleksiPribadiController;
@@ -41,6 +42,10 @@ Route::group(["middleware" => "api", "prefix" => "v1"], function () {
 
         Route::get('kategori-buku-relasi', [KategoriBukuRelasiController::class, 'index']);
         Route::get('kategori-buku-relasi/{id}', [KategoriBukuRelasiController::class, 'show'])->where('id', '[0-9]+');
+
+        Route::get('get-all-read-buku', [BukuReadController::class, 'index']);
+        Route::post('add-buku-read', [BukuReadController::class, 'store']);
+        Route::get('get-buku-read/{id}', [BukuReadController::class, 'show'])->where('id', '[0-9]+');
 
         // Buku routes
         Route::group(["middleware" => "admin.librarian"], function () {

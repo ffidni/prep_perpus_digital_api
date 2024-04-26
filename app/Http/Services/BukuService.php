@@ -4,12 +4,10 @@ namespace App\Http\Services;
 
 use App\Exceptions\ApiException;
 use App\Http\Requests\GetBukuRequest;
-use App\Http\Requests\PaginationRequest;
 use App\Library\HelperLib;
 use App\Models\BukuModel;
-use App\Models\GroupChat;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class BukuService
 {
@@ -32,7 +30,7 @@ class BukuService
 
     public function getAllBukus($request, GetBukuRequest $getBukuRequest)
     {
-        $filters = array_merge($request->only(["per_page", "page", "search"]), $getBukuRequest->only(["tahun_terbit", "is_premium", "kategori_id"]));
+        $filters = array_merge($request->only(["per_page", "page", "search"]), $getBukuRequest->only(["tahun_terbit", "is_premium", "kategori_id", "rekomendasi"]));
         $user = auth()->user();
         $query = BukuModel::with("daftar_kategori");
 
@@ -52,7 +50,26 @@ class BukuService
         }
 
         if (isset($filters['kategori_id'])) {
-            $query->where('kategori_id', $filters['is_premium']);
+            $query->where('kategori_id', $filters['kategori_id']);
+        }
+
+        if (isset($filters['rekomendasi']) && $filters['rekomendasi']) {
+            $query->leftJoin('ulasan_buku', 'buku.buku_id', '=', 'ulasan_buku.buku_id')
+                ->groupBy('buku.buku_id')
+                ->select(
+                    'buku.buku_id',
+                    'buku.judul',
+                    'buku.penulis',
+                    'buku.penerbit',
+                    'buku.tahun_terbit',
+                    'buku.is_premium',
+                    'buku.cover',
+                    'buku.ebook_path',
+                    'buku.ebook_format',
+                    'buku.ebook_size',
+                    DB::raw('IFNULL(ROUND(AVG(ulasan_buku.rating), 1), null) as rating')
+                )
+                ->orderByDesc('rating');
         }
 
         return $query->paginate($filters['per_page'], ['*'], "Page", $filters['page']);
